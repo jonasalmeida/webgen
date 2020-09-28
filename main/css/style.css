@@ -71,7 +71,7 @@
 /* Select Boxes */
 
 .select2.select2-container.select2-container--default{
-    width: 90% !important;
+    width: 70% !important;
 }
 
 .select2-container .select2-search--inline {
@@ -120,14 +120,14 @@
     justify-content: center;
 }
 
-#exampleButton {
+/* #exampleButton {
     width: 15%;
     margin-left: 34.14%;
-}
+} */
 
 #submitButton {
     width: 15%;
-    margin-right: 35%;
+    margin-left: 42%;
 }
 
 /* ///////////////////////////////////////////////////////////////////////////////////////////////////////////////// */

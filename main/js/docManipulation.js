@@ -39,8 +39,88 @@ removeSVGelements = function() {
   };
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function displaySingleGroupSelectors() {
-  document.getElementById("single-group-analysis").classList.remove('hide');
+
+  if(document.getElementById("bigDiv")) {
+    document.getElementById("bigDiv").remove();
+  }
+
+  if(document.getElementById("buttonClone2")) {
+    document.getElementById("buttonClone2").classList.add('hide');
+  }
+
+  if(document.getElementById('mySingleHR') && document.getElementById('singleClone')) {
+  } else {
+
+    let mySingleHR = document.createElement('hr');
+    mySingleHR.setAttribute('style', 'border-color: #4db6ac;');
+    mySingleHR.setAttribute('id', 'mySingleHR');
+    document.getElementById('numberOfGroups').after(mySingleHR);
+
+    let singleClone = document.getElementById('single-group-analysis').cloneNode(true);
+    singleClone.classList.remove('hide');
+    singleClone.setAttribute('id', 'singleClone')
+    document.getElementById('mySingleHR').appendChild(singleClone);
+
+    let buttonClone = document.getElementById("buttonsAndTabs").cloneNode(true);
+    buttonClone.classList.remove('hide');
+    buttonClone.setAttribute('id', 'buttonClone')
+    document.getElementById('singleClone').after(buttonClone);
+
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function displayMultiGroupSelectors() {  
+
+  if(document.getElementById('mySingleHR')) {
+    document.getElementById("mySingleHR").remove();
+  }
+
+  if(document.getElementById("singleClone")) {
+    document.getElementById("singleClone").classList.add('hide');
+  }
+
+  if(document.getElementById('bigDiv')) {
+  } else {
+    let bigDiv = document.createElement("div"); 
+    bigDiv.setAttribute('class', 'row');
+    bigDiv.setAttribute('id', 'bigDiv');
+    document.getElementById('numberOfGroups').after(bigDiv); 
+
+    let myHR = document.createElement('hr');
+    myHR.setAttribute('style', 'border-color: #4db6ac;');
+    document.getElementById('bigDiv').appendChild(myHR);
+
+    let leftDiv = document.createElement("div"); 
+    leftDiv.setAttribute('class', 'col s6');
+    leftDiv.setAttribute('id', 'leftDiv');
+
+    let rightDiv = document.createElement("div"); 
+    rightDiv.setAttribute('class', 'col s6');
+    rightDiv.setAttribute('id', 'rightDiv');
+
+    bigDiv.appendChild(leftDiv); 
+    bigDiv.appendChild(rightDiv);
+
+    let leftClone = document.getElementById('single-group-analysis').cloneNode(true);
+    leftClone.classList.remove('hide');
+    let rightClone = document.getElementById('single-group-analysis').cloneNode(true);
+    rightClone.classList.remove('hide');
+
+    document.getElementById('leftDiv').appendChild(leftClone);
+    document.getElementById('rightDiv').appendChild(rightClone);
+
+    let buttonClone2 = document.getElementById("buttonsAndTabs").cloneNode(true);
+    buttonClone2.classList.remove('hide');
+    buttonClone2.setAttribute('id', 'buttonClone2')
+    document.getElementById('bigDiv').after(buttonClone2);
+
+  }
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,3 +383,4 @@ showWarning = function(emptyGeneArray_arg) {
 /////////////////////////////////////////////////// Gene/Cohort Checkpoints (above) /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

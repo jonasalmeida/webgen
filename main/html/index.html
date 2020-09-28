@@ -73,32 +73,31 @@
       <br>
       <br>
       <h5 style="text-align: center; font-style: italic; font-family: Georgia, 'Times New Roman', Times, serif ;">A tool for analyzing cancer data from The Cancer Genome Atlas</h5>
-      <p style="text-align: center; font-family: Georgia, 'Times New Roman', Times, serif;">Currently, this tool enables data visualization via heatmap and violin plot.</p>
+      <p style="text-align: center; font-family: Georgia, 'Times New Roman', Times, serif;">Currently, this tool enables visualization of gene expression data via heatmap and violin plot.</p>
       <br>
     </div>
 
     <!--
       How many groups?
     -->
-    <div class="numberOfGroups">
+    <div class="numberOfGroups" id="numberOfGroups">
       <hr style="border-color: #4db6ac;">
       <p style="text-align: center; font-family:Georgia, 'Times New Roman', Times, serif; font-size:large">How many groups would you like to analyze?</p>
       <form style="text-align: center;">
           <label>
-            <input class="with-gap" name="group1" type="radio" onclick="displaySingleGroupSelectors()"/>
+            <input class="with-gap" name="group1" type="radio" onclick="displaySingleGroupSelectors();"/>
               <span style="color: black; padding-right:50px;">One group</span>
           </label>
           <label>
-            <input class="with-gap" name="group1" type="radio" onclick=""/>
+            <input class="with-gap" name="group1" type="radio" onclick="displayMultiGroupSelectors();"/>
               <span style="color: black">Two groups</span>
           </label>
       </form>
       <br>
     </div>
 
+    <!-- Single-group analysis -->
     <div id="single-group-analysis" class="hide">
-
-    <hr style="border-color: #4db6ac;">
 
     <!--
     Setting up the user input text fields.
@@ -166,11 +165,14 @@
         </select>
       </div>
 
+      </div>
+
+      <div id='buttonsAndTabs' class='hide'>
       <!--
       Setting up the buttons.
       -->
       <div className="mainWindowButtons" id = "mainWindowButtons">
-          <button class="col s3 btn waves-effect waves-light" onclick="setExampleVars()" id='exampleButton'>Use Example</button>
+          <!-- <button class="col s3 btn waves-effect waves-light" onclick="setExampleVars()" id='exampleButton'>Use Example</button> -->
           <button class="col s3 btn waves-effect waves-light" onclick="buildPlots()" id='submitButton'>Submit</button>
       </div>
 
@@ -207,7 +209,7 @@
     <br>
     <br>
     <br>
-
+    <br>
     </div>
 
     <!--
