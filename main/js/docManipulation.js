@@ -88,20 +88,6 @@ function displaySingleGroupSelectors() {
 
   /////////////////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////////////////////
-
-
-  if(document.getElementById("bigDiv")) {
-    document.getElementById("bigDiv").remove();
-  }
-
-  if(document.getElementById("buttonClone2")) {
-    document.getElementById("buttonClone2").classList.add('hide');
-  }
-
-  if(document.getElementById('mySingleHR')) {
-  } else {
-
     // Add hr
 
     let mySingleHR = document.createElement('hr');
@@ -109,13 +95,18 @@ function displaySingleGroupSelectors() {
     mySingleHR.setAttribute('id', 'mySingleHR');
     document.getElementById('numberOfGroups').after(mySingleHR);
 
+    let singleBigDiv = document.createElement("div"); 
+    singleBigDiv.setAttribute('class', 'row');
+    singleBigDiv.setAttribute('id', 'singleBigDiv');
+    document.getElementById('mySingleHR').after(singleBigDiv); 
+
     // Add (1)
 
     let para = document.createElement("P");
     para.setAttribute('style', 'text-align: center; font-family: Georgia, "Times New Roman", Times, serif');
     para.setAttribute('id', 'para');
     para.innerText = "1) Select cancer type(s)";            
-    mySingleHR.after(para);
+    singleBigDiv.appendChild(para);
 
     let newDiv = document.createElement("div"); 
     newDiv.setAttribute('id', 'cancerQuerySelectBox');
@@ -172,57 +163,201 @@ function displaySingleGroupSelectors() {
     buttonClone.setAttribute('id', 'buttonClone')
     document.getElementById('mutationQuerySelectBox').after(buttonClone);
 
-  }
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function displayMultiGroupSelectors() {  
 
-  if(document.getElementById('mySingleHR')) {
-    document.getElementById("mySingleHR").remove();
-  }
+    /////////////////////////////////////////////////////////////////////////
 
-  if(document.getElementById("singleClone")) {
-    document.getElementById("singleClone").classList.add('hide');
-  }
+  // Setting up the user input text fields.
 
-  if(document.getElementById('bigDiv')) {
-  } else {
+  // Get the list of valid genes users can search for:
+  validGeneListFetch = getValidGeneList();
+  validGeneListFetch.then(function(validGeneList){
+    $(document).ready(function() {
+
+      // For Cancer Type Select2 Drop down:
+      $('.cancerTypeMultipleSelection').select2({
+        placeholder: "Cancer Type(s)"
+      });
+
+      // For Gene Select2 Drop down:
+      $('.geneMultipleSelection').select2({
+        tags: true,
+        createTag: function (params) {
+          // If the gene entered is not valid, don't create new tag:
+          if (~validGeneList.includes(params.term.toUpperCase()) === -1) {
+            return null;
+          }
+          // If the gene entered is valid, create new tag:
+          return {
+            id: params.term.toUpperCase(),
+            text: params.term.toUpperCase()
+          }
+        },
+        placeholder: "Gene Name(s)"
+      });
+
+      // For Mutation Select2 Drop down:
+      $('.mutationMultipleSelection').select2({
+        placeholder: "Mutation(s)"
+      });
+
+      // Fill the Select2 Boxes:
+      fillCancerTypeSelectBox();
+      fillGeneSelectBox();
+    });
+  });
+
+  /////////////////////////////////////////////////////////////////////////
+
     let bigDiv = document.createElement("div"); 
     bigDiv.setAttribute('class', 'row');
     bigDiv.setAttribute('id', 'bigDiv');
     document.getElementById('numberOfGroups').after(bigDiv); 
 
-    let myHR = document.createElement('hr');
-    myHR.setAttribute('style', 'border-color: #4db6ac;');
-    document.getElementById('bigDiv').appendChild(myHR);
+    // Add hr
+
+    let myMultiHR = document.createElement('hr');
+    myMultiHR.setAttribute('style', 'border-color: #4db6ac;');
+    myMultiHR.setAttribute('id', 'myMultiHR');
+    document.getElementById('numberOfGroups').after(myMultiHR);
 
     let leftDiv = document.createElement("div"); 
     leftDiv.setAttribute('class', 'col s6');
     leftDiv.setAttribute('id', 'leftDiv');
+    bigDiv.appendChild(leftDiv); 
+    
+    // Add (1)
+
+    let para = document.createElement("P");
+    para.setAttribute('style', 'text-align: center; font-family: Georgia, "Times New Roman", Times, serif');
+    para.setAttribute('id', 'para');
+    para.innerText = "1) Select cancer type(s)";            
+    leftDiv.appendChild(para);
+
+    let newDiv = document.createElement("div"); 
+    newDiv.setAttribute('id', 'cancerQuerySelectBox');
+    para.after(newDiv)
+    let newSelect = document.createElement("SELECT");
+    newSelect.setAttribute('class', 'cancerTypeMultipleSelection')
+    newSelect.setAttribute('id', 'cancerTypeMultipleSelection')
+    newSelect.setAttribute('multiple', 'multiple')
+    newDiv.appendChild(newSelect)
+
+    // Add (2)
+
+    let para2 = document.createElement("P");
+    para2.setAttribute('style', 'text-align: center; font-family: Georgia, "Times New Roman", Times, serif');
+    para2.setAttribute('id', 'para2');
+    para2.innerText = "2) Select gene(s)";            
+    newDiv.after(para2);
+
+    let paraTip = document.createElement("P");
+    paraTip.setAttribute('style', 'text-align: center; color: gray; font-family: Georgia, "Times New Roman", Times, serif');
+    paraTip.setAttribute('id', 'paraTip');
+    paraTip.innerText = "Tip: Begin typing name of gene, and then select gene from dropdown menu.";            
+    para2.after(paraTip);
+
+    let newDiv2 = document.createElement("div"); 
+    newDiv2.setAttribute('id', 'geneQuerySelectBox');
+    paraTip.after(newDiv2)
+    let newSelect2 = document.createElement("SELECT");
+    newSelect2.setAttribute('class', 'geneMultipleSelection')
+    newSelect2.setAttribute('id', 'geneMultipleSelection')
+    newSelect2.setAttribute('multiple', 'multiple')
+    newSelect2.setAttribute('onchange', 'fillMutationSelectBox()');
+    newDiv2.appendChild(newSelect2)
+
+    // Add (3)
+
+    let para3 = document.createElement("P");
+    para3.setAttribute('style', 'text-align: center; font-family: Georgia, "Times New Roman", Times, serif');
+    para3.setAttribute('id', 'para3');
+    para3.innerText = "3) Select mutation(s)";            
+    newDiv2.after(para3);
+
+    let newDiv3 = document.createElement("div"); 
+    newDiv3.setAttribute('id', 'mutationQuerySelectBox');
+    para3.after(newDiv3)
+    let newSelect3 = document.createElement("SELECT");
+    newSelect3.setAttribute('class', 'mutationMultipleSelection')
+    newSelect3.setAttribute('id', 'mutationMultipleSelection')
+    newSelect3.setAttribute('multiple', 'multiple')
+    newDiv3.appendChild(newSelect3)
+
+    ////// * /////////
+
+    // Add (1)
 
     let rightDiv = document.createElement("div"); 
     rightDiv.setAttribute('class', 'col s6');
     rightDiv.setAttribute('id', 'rightDiv');
+    bigDiv.appendChild(rightDiv); 
 
-    bigDiv.appendChild(leftDiv); 
-    bigDiv.appendChild(rightDiv);
+    let para_e = document.createElement("P");
+    para_e.setAttribute('style', 'text-align: center; font-family: Georgia, "Times New Roman", Times, serif');
+    para_e.setAttribute('id', 'para_e');
+    para_e.innerText = "1) Select cancer type(s)";            
+    rightDiv.appendChild(para_e);
 
-    let leftClone = document.getElementById('single-group-analysis').cloneNode(true);
-    leftClone.classList.remove('hide');
-    let rightClone = document.getElementById('single-group-analysis').cloneNode(true);
-    rightClone.classList.remove('hide');
+    let newDiv_e = document.createElement("div"); 
+    newDiv_e.setAttribute('id', 'cancerQuerySelectBox');
+    para_e.after(newDiv_e)
+    let newSelect_e = document.createElement("SELECT");
+    newSelect_e.setAttribute('class', 'cancerTypeMultipleSelection')
+    newSelect_e.setAttribute('id', 'cancerTypeMultipleSelection')
+    newSelect_e.setAttribute('multiple', 'multiple')
+    newDiv_e.appendChild(newSelect_e)
 
-    document.getElementById('leftDiv').appendChild(leftClone);
-    document.getElementById('rightDiv').appendChild(rightClone);
+    // Add (2)
 
+    let para2_e = document.createElement("P");
+    para2_e.setAttribute('style', 'text-align: center; font-family: Georgia, "Times New Roman", Times, serif');
+    para2_e.setAttribute('id', 'para2_e');
+    para2_e.innerText = "2) Select gene(s)";            
+    newDiv_e.after(para2_e);
+
+    let paraTip_e = document.createElement("P");
+    paraTip_e.setAttribute('style', 'text-align: center; color: gray; font-family: Georgia, "Times New Roman", Times, serif');
+    paraTip_e.setAttribute('id', 'paraTip_e');
+    paraTip_e.innerText = "Tip: Begin typing name of gene, and then select gene from dropdown menu.";            
+    para2_e.after(paraTip_e);
+
+    let newDiv2_e = document.createElement("div"); 
+    newDiv2_e.setAttribute('id', 'geneQuerySelectBox');
+    paraTip_e.after(newDiv2_e)
+    let newSelect2_e = document.createElement("SELECT");
+    newSelect2_e.setAttribute('class', 'geneMultipleSelection')
+    newSelect2_e.setAttribute('id', 'geneMultipleSelection')
+    newSelect2_e.setAttribute('multiple', 'multiple')
+    newSelect2_e.setAttribute('onchange', 'fillMutationSelectBox()');
+    newDiv2_e.appendChild(newSelect2_e)
+
+    // Add (3)
+
+    let para3_e = document.createElement("P");
+    para3_e.setAttribute('style', 'text-align: center; font-family: Georgia, "Times New Roman", Times, serif');
+    para3_e.setAttribute('id', 'para3_e');
+    para3_e.innerText = "3) Select mutation(s)";            
+    newDiv2_e.after(para3_e);
+
+    let newDiv3_e = document.createElement("div"); 
+    newDiv3_e.setAttribute('id', 'mutationQuerySelectBox');
+    para3_e.after(newDiv3_e)
+    let newSelect3_e = document.createElement("SELECT");
+    newSelect3_e.setAttribute('class', 'mutationMultipleSelection')
+    newSelect3_e.setAttribute('id', 'mutationMultipleSelection')
+    newSelect3_e.setAttribute('multiple', 'multiple')
+    newDiv3_e.appendChild(newSelect3_e)
+    
     let buttonClone2 = document.getElementById("buttonsAndTabs").cloneNode(true);
     buttonClone2.classList.remove('hide');
     buttonClone2.setAttribute('id', 'buttonClone2')
     document.getElementById('bigDiv').after(buttonClone2);
-
-  }
 
 }
 
